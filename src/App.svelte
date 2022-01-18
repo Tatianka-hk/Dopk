@@ -1,4 +1,22 @@
 <script>
+	let url;
+	let recordType;
+	const apiURL = '/api/dns'
+	const submit = async () => {
+		//spinner
+		try{
+			const responce = await fetch(`${apiURL}?url=${url}&recordType=${recordType}`);
+			const result = await responce.json();
+			console.log(result);
+		}
+		catch(e){
+			//handle errors
+			console.log(e.message);
+		}
+		finally{
+			//spinner off
+		}
+	}
 </script>
 
 <main>
@@ -7,13 +25,15 @@
 			<div class="content">
 				<input
 					name="DNS Name"
-					placeholder="Enter DNS Name"
+					placeholder="Enter URL Name"
 					style="display: inline-block;"
+					bind:value={url}
 				/>
 				<button
 					id="button"
 					style="display: inline-block;"
 					type="submit"
+					on:click|preventDefault={submit}
 				>
 					Resolve
 				</button>
@@ -22,7 +42,7 @@
 
 		<div class="content">
 			<span>RR Type</span>
-			<select id="rr_type">
+			<select id="rr_type" bind:value={recordType}>
 				<option value="A">A</option>
 				<option value="AAAA">AAAA</option>
 				<option value="ALL">ALL</option>
@@ -57,25 +77,6 @@
 				<option value="WKS">WKS</option>
 			</select>
 
-			<input
-				name="EDNS Client Subnet"
-				placeholder="Enter EDNS Client Subnet"
-				style="display: inline-block;"
-			/>
-			<input
-				type="checkbox"
-				role="switch"
-				name="disable_dnssec"
-				value="true"
-			/>
-			Disable DNSSEC validation
-			<input
-				type="checkbox"
-				role="switch"
-				name="disable_dnssec"
-				value="true"
-			/>
-			Show DNSSEC detail
 			<br />
 			<h2>Result for</h2>
 		</div>

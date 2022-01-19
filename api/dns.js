@@ -1,40 +1,7 @@
 const { Resolver } = require("dns").promises;
 const resolver = new Resolver();
-
-const recordTypes = [
-  "A",
-  "AAAA",
-  "ALL",
-  "CA",
-  "CDS",
-  "CERT",
-  "CNAME",
-  "DNAME",
-  "DNSKEY",
-  "DS",
-  "HINFO",
-  "HTTPS",
-  "INTEGRITY",
-  "KEY",
-  "MX",
-  "NAPTR",
-  "NS",
-  "NSEC",
-  "NSEC3",
-  "NSEC3PARAM",
-  "PTR",
-  "RP",
-  "RRSIG",
-  "SIG",
-  "SOA",
-  "SPF",
-  "SRV",
-  "SSHFP",
-  "SVCB",
-  "TLSA",
-  "TXT",
-  "WKS",
-];
+const _ = require("lodash");
+const recordTypes = ["A", "AAAA", "CNAME", "MX", "NS", "PTR", "SOA", "TXT"];
 
 const ERRORS = {
   BAD_REQUEST: "BAD_REQUEST",
@@ -68,6 +35,7 @@ export default function handler(req, res) {
   };
 
   const getSuccessResponce = (records) => {
+    records = _.flattenDeep(records);
     return res.status(200).json({
       url,
       recordType,

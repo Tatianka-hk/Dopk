@@ -54,7 +54,7 @@ export default function handler(req, res) {
       .then(getSuccessResponce)
       .catch((err) => {
         if (err.code === "ENODATA") return getSuccessResponce([]);
-        getErrorResponce(CustomError(err.code, 500));
+        getErrorResponce(CustomError(err.code, 404));
       });
   } catch (e) {
     return getErrorResponce(e);

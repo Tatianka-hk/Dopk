@@ -1,7 +1,9 @@
 <script>
   import DnsResult from "./DnsResult.svelte";
   import { isLoading, url, recordType } from "./store";
+  console.log(window.location.search);
   const urlSearchParams = new URLSearchParams(window.location.search);
+
   const params = Object.fromEntries(urlSearchParams.entries());
   $url = params.url ?? "";
   $recordType = params.recordType ?? "";
@@ -10,38 +12,37 @@
 <main>
   {#if $isLoading}
     <h1>Loading</h1>
-  {:else}
-    <form action="/">
-      <header>
-        <div class="content">
-          <input name="url" placeholder="Enter URL Name" />
-          <button id="button" disabled={$isLoading} type="submit">
-            Resolve
-          </button>
-        </div>
-      </header>
-
-      <div class="content">
-        <span>RR Type</span>
-        <select id="rr_type" name="recordType">
-          <option value="A">A</option>
-          <option value="AAAA">AAAA</option>
-          <option value="CNAME">CNAME</option>
-          <option value="MX">MX</option>
-          <option value="NS">NS</option>
-          <option value="PTR">PTR</option>
-          <option value="SOA">SOA</option>
-          <option value="TXT">TXT</option>
-        </select>
-
-        <br />
-        {#if $url && $recordType}
-          <DnsResult />
-        {/if}
-        <!-- <h2>Result for</h2> -->
-      </div>
-    </form>
   {/if}
+  <form action="/">
+    <header>
+      <div class="content">
+        <input name="url" placeholder="Enter URL Name" />
+        <button id="button" disabled={$isLoading} type="submit">
+          Resolve
+        </button>
+      </div>
+    </header>
+
+    <div class="content">
+      <span>RR Type</span>
+      <select id="rr_type" name="recordType">
+        <option value="A">A</option>
+        <option value="AAAA">AAAA</option>
+        <option value="CNAME">CNAME</option>
+        <option value="MX">MX</option>
+        <option value="NS">NS</option>
+        <option value="PTR">PTR</option>
+        <option value="SOA">SOA</option>
+        <option value="TXT">TXT</option>
+      </select>
+
+      <br />
+      {#if $url && $recordType}
+        <DnsResult />
+      {/if}
+      <!-- <h2>Result for</h2> -->
+    </div>
+  </form>
 </main>
 
 <style>

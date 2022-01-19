@@ -17,8 +17,8 @@
       console.log(result);
       console.log(JSON.stringify(result, null, 3));
     } catch (e) {
-      $errors = [e.message];
-      console.log(e.message);
+      $errors = [e.status];
+      console.log(e.status);
     } finally {
       isLoading = false;
     }

@@ -1,4 +1,5 @@
 const { Resolver } = require("dns").promises;
+const path = require("path");
 const resolver = new Resolver();
 const _ = require("lodash");
 const recordTypes = ["A", "AAAA", "CNAME", "MX", "NS", "PTR", "SOA", "TXT"];

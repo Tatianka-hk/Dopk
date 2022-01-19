@@ -1,53 +1,21 @@
 <script>
-  import { writable } from "svelte/store";
-  const errors = writable([]);
-  let url;
-
-  let recordType;
-  const apiURL = "/api/dns";
-  let result = {};
-  let isLoading = false;
-  const submit = async () => {
-    isLoading = true;
-    try {
-      const responce = await fetch(
-        `${apiURL}?url=${url}&recordType=${recordType}`
-      );
-      const answer = await responce.json();
-      result.question = {
-        name: url,
-        type: recordType,
-      };
-      result.answer = answer;
-      console.log(result);
-      console.log(JSON.stringify(result, null, 3));
-    } catch (e) {
-      $errors = [e.status];
-      console.log(e.status);
-    } finally {
-      isLoading = false;
-    }
-  };
+  import DnsResult from "./DnsResult.svelte";
+  import { isLoading, url, recordType } from "./store";
+  const urlSearchParams = new URLSearchParams(window.location.search);
+  const params = Object.fromEntries(urlSearchParams.entries());
+  $url = params.url ?? "";
+  $recordType = params.recordType ?? "";
 </script>
 
 <main>
-  {#if isLoading}
+  {#if $isLoading}
     <h1>Loading</h1>
   {:else}
-    <form>
+    <form action="/">
       <header>
         <div class="content">
-          <input
-            name="DNS Name"
-            placeholder="Enter URL Name"
-            bind:value={url}
-          />
-          <button
-            id="button"
-            disabled={isLoading}
-            type="submit"
-            on:click|preventDefault={submit}
-          >
+          <input name="url" placeholder="Enter URL Name" />
+          <button id="button" disabled={$isLoading} type="submit">
             Resolve
           </button>
         </div>
@@ -55,7 +23,7 @@
 
       <div class="content">
         <span>RR Type</span>
-        <select id="rr_type" bind:value={recordType}>
+        <select id="rr_type" name="recordType">
           <option value="A">A</option>
           <option value="AAAA">AAAA</option>
           <option value="CNAME">CNAME</option>
@@ -67,14 +35,11 @@
         </select>
 
         <br />
-        <h2>Result for</h2>
+        {#if $url && $recordType}
+          <DnsResult />
+        {/if}
+        <!-- <h2>Result for</h2> -->
       </div>
-      {#if $errors.length}
-        <h2>{$errors[0]}</h2>
-      {:else}
-        <pre class="output" id="results">{JSON.stringify(result, null, 3)}
-	</pre>
-      {/if}
     </form>
   {/if}
 </main>
@@ -112,14 +77,5 @@
 
   div {
     display: block;
-  }
-
-  pre.output {
-    background-color: #f5f5f5;
-    color: #000;
-    font: 400 14px/20px Roboto Mono, monospace;
-    padding: 1em;
-    white-space: pre-wrap;
-    overflow-wrap: break-word;
   }
 </style>

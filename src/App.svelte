@@ -2,13 +2,19 @@
   let url;
   let recordType;
   const apiURL = "/api/dns";
+  let result = {};
   const submit = async () => {
     //spinner
     try {
       const responce = await fetch(
         `${apiURL}?url=${url}&recordType=${recordType}`,
       );
-      const result = await responce.json();
+      const answer = await responce.json();
+      result.question = {
+        name: url,
+        type: recordType,
+      };
+      result.answer = answer;
       console.log(result);
     } catch (e) {
       //handle errors
@@ -81,7 +87,7 @@
       <h2>Result for</h2>
     </div>
 
-    <pre class="output" id="results">{"ts"}
+    <pre class="output" id="results">{JSON.stringify(result, null, 3)}
 	</pre>
   </form>
 </main>

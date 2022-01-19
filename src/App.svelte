@@ -5,7 +5,7 @@
 
   let recordType;
   const apiURL = "/api/dns";
-  let result = "result:";
+  let result = {};
   let isLoading = false;
   const submit = async () => {
     isLoading = true;

@@ -14,7 +14,7 @@
     <form action="/">
       <header>
         <div class="content">
-          <input name="url" placeholder="Enter URL Name" />
+          <input name="url" placeholder="Enter URL Name" value={$url} />
           <button id="button" disabled={$isLoading} type="submit">
             Resolve
           </button>
@@ -23,7 +23,7 @@
 
       <div class="content">
         <span>RR Type</span>
-        <select id="rr_type" name="recordType">
+        <select id="rr_type" name="recordType" value={$recordType}>
           <option value="A">A</option>
           <option value="AAAA">AAAA</option>
           <option value="CNAME">CNAME</option>

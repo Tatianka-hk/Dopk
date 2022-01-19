@@ -36,9 +36,9 @@
 
         <br />
         {#if $url && $recordType}
+          <h2>Result for</h2>
           <DnsResult />
         {/if}
-        <!-- <h2>Result for</h2> -->
       </div>
     </form>
   {/if}

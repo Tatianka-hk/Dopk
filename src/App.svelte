@@ -11,18 +11,18 @@
 
 <main>
   {#if $isLoading}
-    <h1>Loading</h1>
+    <h1 class="loading">Loading</h1>
   {/if}
+
   <form action="/">
     <header>
       <div class="content">
-        <input name="url" placeholder="Enter URL Name" />
+        <input name="url" placeholder="Enter URL Name" value={$url} />
         <button id="button" disabled={$isLoading} type="submit">
           Resolve
         </button>
       </div>
     </header>
-
     <div class="content">
       <span>RR Type</span>
       <select id="rr_type" name="recordType">
@@ -40,7 +40,6 @@
       {#if $url && $recordType}
         <DnsResult />
       {/if}
-      <!-- <h2>Result for</h2> -->
     </div>
   </form>
 </main>
@@ -78,5 +77,10 @@
 
   div {
     display: block;
+  }
+  .loading {
+    position: fixed;
+    top: 60px;
+    left: 40px;
   }
 </style>

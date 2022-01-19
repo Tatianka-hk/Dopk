@@ -2,19 +2,22 @@
   let url;
   let recordType;
   const apiURL = "/api/dns";
+  let result = "result:";
+  let isLoading = false;
   const submit = async () => {
-    //spinner
+    isLoading = false;
     try {
       const responce = await fetch(
-        `${apiURL}?url=${url}&recordType=${recordType}`,
+        `${apiURL}?url=${url}&recordType=${recordType}`
       );
-      const result = await responce.json();
+      result = await responce.json();
       console.log(result);
+      console.log(JSON.stringify(result, null, 3));
     } catch (e) {
       //handle errors
       console.log(e.message);
     } finally {
-      //spinner off
+      isLoading = false;
     }
   };
 </script>
@@ -23,15 +26,10 @@
   <form>
     <header>
       <div class="content">
-        <input
-          name="DNS Name"
-          placeholder="Enter URL Name"
-          style="display: inline-block;"
-          bind:value={url}
-        />
+        <input name="DNS Name" placeholder="Enter URL Name" bind:value={url} />
         <button
           id="button"
-          style="display: inline-block;"
+          disabled={isLoading}
           type="submit"
           on:click|preventDefault={submit}
         >
@@ -45,43 +43,23 @@
       <select id="rr_type" bind:value={recordType}>
         <option value="A">A</option>
         <option value="AAAA">AAAA</option>
-        <option value="ALL">ALL</option>
-        <option value="CA">CA</option>
-        <option value="CDS">CDS</option>
-        <option value="CERT">CERT</option>
+        <option value="ANY">ANY</option>
+        <option value="CAA">CAA</option>
         <option value="CNAME">CNAME</option>
-        <option value="DNAME">DNAME</option>
-        <option value="DNSKEY">DNSKEY</option>
-        <option value="DS">DS</option>
-        <option value="HINFO">HINFO</option>
-        <option value="HTTPS">HTTPS</option>
-        <option value="INTEGRITY">INTEGRITY</option>
-        <option value="KEY">KEY</option>
         <option value="MX">MX</option>
         <option value="NAPTR">NAPTR</option>
         <option value="NS">NS</option>
-        <option value="NSEC">NSEC</option>
-        <option value="NSEC3">NSEC3</option>
-        <option value="NSEC3PARAM">NSEC3PARAM</option>
         <option value="PTR">PTR</option>
-        <option value="RP">RP</option>
-        <option value="RRSIG">RRSIG</option>
-        <option value="SIG">SIG</option>
         <option value="SOA">SOA</option>
-        <option value="SPF">SPF</option>
         <option value="SRV">SRV</option>
-        <option value="SSHFP">SSHFP</option>
-        <option value="SVCB">SVCB</option>
-        <option value="TLSA">TLSA</option>
         <option value="TXT">TXT</option>
-        <option value="WKS">WKS</option>
       </select>
 
       <br />
       <h2>Result for</h2>
     </div>
 
-    <pre class="output" id="results">{"ts"}
+    <pre class="output" id="results">{JSON.stringify(result, null, 3)}
 	</pre>
   </form>
 </main>

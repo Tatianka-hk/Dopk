@@ -1,30 +1,32 @@
 <script>
   import DnsResult from "./DnsResult.svelte";
   import { isLoading, url, recordType, errors, result } from "./store";
+  import { onMount } from "svelte";
   const urlSearchParams = new URLSearchParams(window.location.search);
-
   const params = Object.fromEntries(urlSearchParams.entries());
   $url = params.url ?? "";
   $recordType = params.recordType ?? "";
   const apiURL = "/api/dns";
-  window.onload = async () => {
+  onMount(async () => {
     $isLoading = true;
     try {
-      const responce = await fetch(
-        `${apiURL}?url=${$url}&recordType=${$recordType}`
-      );
-      const answer = await responce.json();
-      $result.question = {
-        name: $url,
-        type: $recordType,
-      };
-      $result.answer = answer;
+      if ($url && $recordType) {
+        const responce = await fetch(
+          `${apiURL}?url=${$url}&recordType=${$recordType}`
+        );
+        const answer = await responce.json();
+        $result.question = {
+          name: $url,
+          type: $recordType,
+        };
+        $result.answer = answer;
+      }
     } catch (e) {
       $errors = [e.message];
     } finally {
       $isLoading = false;
     }
-  };
+  });
 </script>
 
 <main>
@@ -52,9 +54,7 @@
       <br />
       {#if $isLoading}
         <span class="loading"><h1>Loading</h1></span>
-      {/if}
-
-      {#if $url && $recordType}
+      {:else if $url && $recordType}
         <DnsResult />
       {/if}
     </div>

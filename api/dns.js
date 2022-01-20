@@ -1,7 +1,6 @@
 const { Resolver } = require("dns").promises;
 const path = require("path");
 const resolver = new Resolver();
-const _ = require("lodash");
 const recordTypes = ["A", "AAAA", "CNAME", "MX", "NS", "PTR", "SOA", "TXT"];
 
 const ERRORS = {
@@ -17,8 +16,8 @@ const CustomError = (message, status = 500) => {
   return error;
 };
 
-const getErrorResponce = (e, url, recordType, res) => {
-  return res.status(e.status).json({
+const getErrorResponce = (e, url, recordType) => {
+  return {
     errors: [
       {
         url,
@@ -26,21 +25,23 @@ const getErrorResponce = (e, url, recordType, res) => {
         code: e.message,
       },
     ],
-  });
+  };
 };
 
-const getSuccessResponce = (records, url, recordType, res) => {
-  records = _.flattenDeep(records);
-  return res.status(200).json({
+const getSuccessResponce = (records, url, recordType) => {
+  if (Array.isArray(records)) {
+    records = records.flat(Infinity);
+  }
+  return {
     url,
     recordType,
     records,
-  });
+  };
 };
 
 export default function handler(req, res) {
   if (req.method !== "GET") {
-    throw CustomError(ERRORS.BAD_RECORD_TYPE);
+    throw CustomError(ERRORS.BAD_RECORD_TYPE, 403);
   }
   const { url, recordType } = req.query;
 
@@ -51,13 +52,17 @@ export default function handler(req, res) {
 
     resolver
       .resolve(url, recordType)
-      .then(getSuccessResponce)
+      .then((result) =>
+        res.status(200).json(getSuccessResponce(result, url, recordType))
+      )
       .catch((err) => {
         if (err.code === "ENODATA")
-          return getSuccessResponce([], url, recordType, res);
-        getErrorResponce(CustomError(err.code, 404), url, recordType, res);
+          return res.status(200).json(getSuccessResponce([], url, recordType));
+        return res
+          .status(404)
+          .json(getErrorResponce(CustomError(err.code, 404), url, recordType));
       });
   } catch (e) {
-    return getErrorResponce(e, url, recordType, res);
+    return res.status(e.status).json(getErrorResponce(e, url, recordType));
   }
 }

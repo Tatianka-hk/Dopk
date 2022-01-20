@@ -1,19 +1,33 @@
 <script>
   import DnsResult from "./DnsResult.svelte";
-  import { isLoading, url, recordType } from "./store";
-  console.log(window.location.search);
+  import { isLoading, url, recordType, errors, result } from "./store";
   const urlSearchParams = new URLSearchParams(window.location.search);
 
   const params = Object.fromEntries(urlSearchParams.entries());
   $url = params.url ?? "";
   $recordType = params.recordType ?? "";
+  const apiURL = "/api/dns";
+  window.onload = async () => {
+    $isLoading = true;
+    try {
+      const responce = await fetch(
+        `${apiURL}?url=${$url}&recordType=${$recordType}`
+      );
+      const answer = await responce.json();
+      $result.question = {
+        name: $url,
+        type: $recordType,
+      };
+      $result.answer = answer;
+    } catch (e) {
+      $errors = [e.message];
+    } finally {
+      $isLoading = false;
+    }
+  };
 </script>
 
 <main>
-  {#if $isLoading}
-    <span class="loading"><h1>Loading</h1></span>
-  {/if}
-
   <form action="/">
     <header>
       <div class="content">
@@ -35,8 +49,11 @@
         <option value="SOA">SOA</option>
         <option value="TXT">TXT</option>
       </select>
-
       <br />
+      {#if $isLoading}
+        <span class="loading"><h1>Loading</h1></span>
+      {/if}
+
       {#if $url && $recordType}
         <DnsResult />
       {/if}

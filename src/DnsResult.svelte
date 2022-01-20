@@ -1,24 +1,5 @@
 <script>
   import { errors, isLoading, url, recordType, result } from "./store";
-  const apiURL = "/api/dns";
-  window.onload = async () => {
-    $isLoading = true;
-    try {
-      const responce = await fetch(
-        `${apiURL}?url=${$url}&recordType=${$recordType}`
-      );
-      const answer = await responce.json();
-      $result.question = {
-        name: $url,
-        type: $recordType,
-      };
-      $result.answer = answer;
-    } catch (e) {
-      $errors = [e.message];
-    } finally {
-      $isLoading = false;
-    }
-  };
 </script>
 
 <main>

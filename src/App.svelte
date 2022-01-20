@@ -11,7 +11,7 @@
 
 <main>
   {#if $isLoading}
-    <h1 class="loading">Loading</h1>
+    <span class="loading"><h1>Loading</h1></span>
   {/if}
 
   <form action="/">

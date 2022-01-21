@@ -1,5 +1,5 @@
 <script>
-  import { errors, isLoading, url, recordType, result } from "./store";
+  import { errors, result } from "./store";
 </script>
 
 <main>

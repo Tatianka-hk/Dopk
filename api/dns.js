@@ -59,8 +59,8 @@ export default function handler(req, res) {
         if (err.code === "ENODATA")
           return res.status(200).json(getSuccessResponce([], url, recordType));
         return res
-          .status(404)
-          .json(getErrorResponce(CustomError(err.code, 404), url, recordType));
+          .status(400)
+          .json(getErrorResponce(CustomError(err.code, 400), url, recordType));
       });
   } catch (e) {
     return res.status(e.status).json(getErrorResponce(e, url, recordType));

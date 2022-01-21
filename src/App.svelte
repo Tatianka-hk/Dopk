@@ -1,10 +1,26 @@
 <script>
   import DnsResult from "./DnsResult.svelte";
   import { isLoading, url, recordType, errors, result } from "./store";
-
+  import { onMount } from "svelte";
+  const urlSearchParams = new URLSearchParams(window.location.search);
+  const params = Object.fromEntries(urlSearchParams.entries());
   // const formData = {};
 
   const apiURL = "/api/dns";
+  onMount(() => {
+    if (!params.url && !params.recordType) {
+      window.history.pushState(
+        {},
+        null,
+        `?url=${$url}&recordType=${$recordType}`
+      );
+    } else {
+      $url = params.url;
+      $recordType = params.recordType;
+      onSubmit();
+    }
+  });
+
   const onSubmit = async () => {
     $isLoading = true;
     window.history.pushState(
@@ -33,7 +49,7 @@
 </script>
 
 <main>
-  <form on:submit|preventDefault={onSubmit} action="/132213132">
+  <form on:submit|preventDefault={onSubmit}>
     <header>
       <div class="content">
         <input name="url" placeholder="Enter URL Name" bind:value={$url} />
@@ -44,8 +60,8 @@
     </header>
     <div class="content">
       <span>RR Type</span>
-      <select id="rr_type" name="recordType" bind:value={$recordType}>
-        <option value="A">A</option>
+      <select name="recordType" bind:value={$recordType}>
+        <option selected value="A">A</option>
         <option value="AAAA">AAAA</option>
         <option value="CNAME">CNAME</option>
         <option value="MX">MX</option>

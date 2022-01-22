@@ -17,11 +17,14 @@
 
   const apiURL = "/api/dns";
   onMount(() => {
+    //считываем все гет параметры страницы, а если
+    //их нет то ставим дефолтные
     $url = params.url ? params.url : defaultState.url;
     $recordType = params.recordType
       ? params.recordType
       : defaultState.recordType;
-    onSubmit();
+    window.history.pushState({}, null, $urlString);
+    if ($url && $recordType) onSubmit();
   });
 
   const onSubmit = async () => {

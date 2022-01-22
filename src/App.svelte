@@ -13,11 +13,9 @@
 
   const apiURL = "/api/dns";
   onMount(() => {
-    if (!params.recordType) {
-      $recordType = defaultState.recordType;
-    } else {
-      $recordType = params.recordType;
-    }
+    $recordType = !params.recordType
+      ? defaultState.recordType
+      : params.recordType;
     $url = params.url;
     onSubmit();
   });

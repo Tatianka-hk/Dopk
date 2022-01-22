@@ -8,3 +8,4 @@ export const recordType = writable("AAAA");
 const urlSearchParams = new URLSearchParams(window.location.search);
 export const params = Object.fromEntries(urlSearchParams.entries());
 export const result = writable({});
+export const defaultState = { recordType: "AAAA" };

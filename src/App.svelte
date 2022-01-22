@@ -1,25 +1,25 @@
 <script>
   import DnsResult from "./DnsResult.svelte";
-  import { isLoading, url, recordType, errors, result, params } from "./store";
+  import {
+    isLoading,
+    url,
+    recordType,
+    errors,
+    result,
+    params,
+    defaultState,
+  } from "./store";
   import { onMount } from "svelte";
 
   const apiURL = "/api/dns";
   onMount(() => {
-    if (!params.url && !params.recordType) {
-      window.history.pushState(
-        {},
-        null,
-        `?url=${$url}&recordType=${$recordType}` //
-      );
-    } else if (!params.recordType) {
-      $url = params.url;
-      $recordType = "AAAA";
-      onSubmit();
+    if (!params.recordType) {
+      $recordType = defaultState.recordType;
     } else {
-      $url = params.url;
       $recordType = params.recordType;
-      onSubmit();
     }
+    $url = params.url;
+    onSubmit();
   });
 
   const onSubmit = async () => {

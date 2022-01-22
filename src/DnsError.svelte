@@ -1,9 +1,9 @@
 <script>
-  import { result } from "./store";
+  import { errors } from "./store";
 </script>
 
 <main>
-  <pre class="output" id="results">{JSON.stringify($result, null, 3)}</pre>
+  <pre class="output" id="results">{JSON.stringify($errors, null, 3)}</pre>
 </main>
 
 <style>

@@ -1,16 +1,12 @@
 <script>
   import DnsResult from "./DnsResult.svelte";
-  import {
-    isLoading,
-    url,
-    recordType,
-    errors,
-    result,
-    urlString,
-  } from "./store";
+  import DnsError from "./DnsError.svelte";
+  import { url, recordType, errors, result, urlString } from "./store";
   import { onMount } from "svelte";
   const urlSearchParams = new URLSearchParams(window.location.search);
   const params = Object.fromEntries(urlSearchParams.entries());
+
+  let isLoading = false;
 
   const defaultState = { recordType: "AAAA", url: "www.google.com" };
   const apiURL = "/api/dns";
@@ -29,7 +25,7 @@
   });
 
   const onSubmit = async () => {
-    $isLoading = true;
+    isLoading = true;
 
     try {
       const responce = await fetch(`${apiURL}${$urlString}`);
@@ -42,7 +38,7 @@
     } catch (e) {
       $errors = [e.message];
     } finally {
-      $isLoading = false;
+      isLoading = false;
       window.history.pushState({}, null, `${$urlString}`);
     }
   };
@@ -53,7 +49,7 @@
     <header>
       <div class="content">
         <input name="url" placeholder="Enter URL Name" bind:value={$url} />
-        <button id="button" disabled={$isLoading} type="submit">
+        <button id="button" disabled={isLoading} type="submit">
           Resolve
         </button>
       </div>
@@ -71,10 +67,14 @@
         <option value="TXT">TXT</option>
       </select>
       <br />
-      {#if $isLoading}
+      {#if isLoading}
         <span class="loading"><h1>Loading</h1></span>
       {:else if $url && $recordType}
-        <DnsResult />
+        {#if $errors.length}
+          <DnsError />
+        {:else}
+          <DnsResult />
+        {/if}
       {/if}
     </div>
   </form>

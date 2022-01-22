@@ -1,10 +1,7 @@
 <script>
   import DnsResult from "./DnsResult.svelte";
-  import { isLoading, url, recordType, errors, result } from "./store";
+  import { isLoading, url, recordType, errors, result, params } from "./store";
   import { onMount } from "svelte";
-  const urlSearchParams = new URLSearchParams(window.location.search);
-  const params = Object.fromEntries(urlSearchParams.entries());
-  // const formData = {};
 
   const apiURL = "/api/dns";
   onMount(() => {
@@ -12,8 +9,12 @@
       window.history.pushState(
         {},
         null,
-        `?url=${$url}&recordType=${$recordType}`
+        `?url=${$url}&recordType=${$recordType}` //
       );
+    } else if (!params.recordType) {
+      $url = params.url;
+      $recordType = "AAAA";
+      onSubmit();
     } else {
       $url = params.url;
       $recordType = params.recordType;

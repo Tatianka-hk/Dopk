@@ -5,8 +5,6 @@ export const isLoading = writable(false);
 export const errors = writable([]);
 export const url = writable("");
 export const recordType = writable("AAAA");
+const urlSearchParams = new URLSearchParams(window.location.search);
+export const params = Object.fromEntries(urlSearchParams.entries());
 export const result = writable({});
-export const urlString = derived(
-  [url, recordType],
-  ([$url, $recordType]) => `?url=${$url}&recordType=${$recordType}`
-);

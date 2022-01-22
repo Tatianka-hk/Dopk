@@ -9,3 +9,11 @@ const urlSearchParams = new URLSearchParams(window.location.search);
 export const params = Object.fromEntries(urlSearchParams.entries());
 export const result = writable({});
 export const defaultState = { recordType: "AAAA" };
+export const urlString = writable(
+  derived(recordType, ($recordType, set) => {
+    set({
+      ...defaultState.recordType,
+      ...params.$recordType,
+    });
+  })
+);

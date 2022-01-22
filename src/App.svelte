@@ -1,21 +1,10 @@
 <script>
   import DnsResult from "./DnsResult.svelte";
-  import {
-    isLoading,
-    url,
-    recordType,
-    errors,
-    result,
-    params,
-    defaultState,
-  } from "./store";
+  import { isLoading, url, recordType, errors, result, params } from "./store";
   import { onMount } from "svelte";
 
   const apiURL = "/api/dns";
   onMount(() => {
-    $recordType = !params.recordType
-      ? defaultState.recordType
-      : params.recordType;
     $url = params.url;
     onSubmit();
   });

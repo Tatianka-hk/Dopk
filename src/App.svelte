@@ -1,10 +1,16 @@
 <script>
   import DnsResult from "./DnsResult.svelte";
-  import { isLoading, url, recordType, errors, result } from "./store";
+  import {
+    isLoading,
+    url,
+    recordType,
+    errors,
+    result,
+    urlString,
+  } from "./store";
   import { onMount } from "svelte";
   const urlSearchParams = new URLSearchParams(window.location.search);
   const params = Object.fromEntries(urlSearchParams.entries());
-  // const formData = {};
 
   const defaultState = { recordType: "AAAA", url: "www.google.com" };
   const apiURL = "/api/dns";
@@ -13,8 +19,12 @@
       ...defaultState,
       ...Object.fromEntries(Object.entries(params).filter((_, v) => v)),
     };
-    url.set(normalizedParams.url);
-    recordType.set(normalizedParams.recordType);
+    url.set(normalizedParams.url ? normalizedParams.url : defaultState.url);
+    recordType.set(
+      normalizedParams.recordType
+        ? normalizedParams.recordType
+        : defaultState.recordType
+    );
     onSubmit();
   });
 
